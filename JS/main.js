@@ -1,48 +1,54 @@
-/* 3. Add the JavaScript function upload() in the JS panel. This function should:
 
-* Create a variable that gets the value of the text from the text input element, and
-* Display this text in an alert. */
-
-/* function upload() {
-  //Get input from text input
-  var fileinput = document.getElementById("finput");
-  var filename = fileinput.value;
-
-  //Alert dispaly text
-  alert("You chose " + filename);
-} */
-
-/* 3. Adapt the upload() function to use the file input to display an image. Your function should also:
-
-        Get the file input.
-        Create a SimpleImage from the chosen file. The SimpleImage library can be found at https://www.dukelearntoprogram.com/course1/common/js/image/SimpleImage.js. Remember you will need to use the <script src=’ ‘></script> tags in the HTML pane to tell your web page where to find the Simple Image library.
-        Get the canvas element, and draw the image on the canvas. Note that you can define only one of the width or height of the canvas to avoid changing the image aspect ratio. */
-
-var image; //Global Variable so upload() and makeGray() both can use it.
-
-//But Try to Minimize the use of Global Variables. Relying on too many can make it hard to understand the code you're developing and how the functions interact with each other.
-
-var image2;
+var img=null;
+var gray=null;
+var red = null;
+var canvas = document.getElementById("can");
 
 function upload() {
-  var imgcanvas = document.getElementById("can");
-  // var imgcanvas2 = document.getElementById("can2");
-  var fileinput = document.getElementById("finput");
-  // var image = new SimpleImage(fileinput);
-  image = new SimpleImage(fileinput);
-  image2 = new SimpleImage(fileinput);
+    var imgFile = document.getElementById("finput");
+    img = new SimpleImage(imgFile);
+    gray = new SimpleImage(imgFile);//Copy
+    red = new SimpleImage(imgFile);//Copy
+    /* have the image loading function create a copy of the image for each filter the user could click. That way, you can manipulate one version of the image, while preserving a copy of the original image. */
 
-  image.drawTo(imgcanvas); //Method inclusded in SimpleImage Libraray. We will call image.drawTo and use the canvas element as the parameter to indicate the SimpleImage should be drawn on a specific canvas of our choosing.
+    //Get Canvas Element
+    img.drawTo(canvas);
 }
 
 function makeGray() {
-  for (var pixel of image2.values()) {
-    var avg = (pixel.getRed() + pixel.getGreen() + pixel.getBlue()) / 3;
+  
+    if (gray == null || !gray.complete()) {
+        alert("Image not loaded");
+        return;
+      } else {
+    for (var pixel of gray.values()) {
+        var avg = (pixel.getRed()+pixel.getGreen()+pixel.getBlue())/3;
 
-    pixel.setRed(avg);
-    pixel.setGreen(avg);
-    pixel.setBlue(avg);
-  }
-  var imgcanvas2 = document.getElementById("can2");
-  image2.drawTo(imgcanvas2);
+        pixel.setRed(avg);
+        pixel.setGreen(avg);
+        pixel.setBlue(avg);
+    }
+    var canvas = document.getElementById("can");
+    gray.drawTo(canvas);}
+}
+
+function makeRed() {
+
+    if (red == null || !red.complete()) {
+        alert("Image not loaded");
+        return;
+      } else{ 
+    for (var pixel of red.values()) {
+        pixel.setRed(255);
+    }
+    var canvas = document.getElementById("can");
+    red.drawTo(canvas);}
+}
+
+function reset() {
+    if (img == null || !img.complete()) {
+        alert("Image not loaded");
+        return;
+      } else{
+    img.drawTo(canvas);}
 }
