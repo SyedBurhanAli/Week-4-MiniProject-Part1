@@ -29,7 +29,8 @@ function makeGray() {
         pixel.setBlue(avg);
     }
     var canvas = document.getElementById("can");
-    gray.drawTo(canvas);}
+    gray.drawTo(canvas);
+    }
 }
 
 function makeRed() {
@@ -39,10 +40,22 @@ function makeRed() {
         return;
       } else{ 
     for (var pixel of red.values()) {
-        pixel.setRed(255);
+        var avg = (pixel.getRed() + pixel.getGreen() + pixel.getBlue()) / 3;
+
+        if (avg < 128){
+            pixel.setRed(2*avg);
+            pixel.setGreen(0);
+            pixel.setBlue(0);
+        } else {
+            pixel.setRed(255);
+            pixel.setGreen(2*avg-255);
+            pixel.setBlue(2*avg-255);
+        }
     }
     var canvas = document.getElementById("can");
-    red.drawTo(canvas);}
+    red.drawTo(canvas);
+    }
+    
 }
 
 function reset() {
@@ -50,5 +63,13 @@ function reset() {
         alert("Image not loaded");
         return;
       } else{
-    img.drawTo(canvas);}
+        for (var pixel of img.values()) {
+            var x = pixel.getX();
+            var y = pixel.getY();
+            var bgPixel = img.getPixel(x, y);
+            gray.setPixel(x, y, bgPixel);
+            red.setPixel(x, y, bgPixel);    
+        }
+        img.drawTo(canvas);
+        }
 }
