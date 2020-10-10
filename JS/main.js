@@ -3,6 +3,7 @@ var img=null;
 var gray=null;
 var red = null;
 var rainbow = null;
+var blurr = null;
 var canvas = document.getElementById("can");
 
 //Image Upload
@@ -12,6 +13,8 @@ function upload() {
     gray = new SimpleImage(imgFile);//Copy
     red = new SimpleImage(imgFile);//Copy
     rainbow = new SimpleImage(imgFile);//copy
+    blurr = new SimpleImage(imgFile);//copy
+
     /* have the image loading function create a copy of the image for each filter the user could click. That way, you can manipulate one version of the image, while preserving a copy of the original image. */
 
     //Get Canvas Element
@@ -199,3 +202,86 @@ function reset() {
     (2 - 153/127.5)*avg + 2*153 - 255	= 0.8*avg + 51    for avg >=128
     */
 
+    // var x2 = null;
+    // var y2 = null;
+
+    function makeBlur() {
+    // var blurr;
+
+    var blank = new SimpleImage(blurr.getWidth(),blurr.getHeight());
+
+    for (var pixel of blurr.values()){
+        var x = pixel.getX();
+        var y = pixel.getY();
+        if (Math.random() < 0.5){
+        // var real = img.getPixel(x, y);
+        //and set output's corresponding pixel to blurr image pixel
+        blank.setPixel(x, y, pixel);//from Help
+        }
+
+        else {
+        var x2 = x-(Math.floor((Math.random() * 10)));
+        var y2 = y-(Math.floor((Math.random() * 10)));
+        //  if (x2 == 0 || x2 >= blurr.getWidth()) {
+        //      x2 = pixel.getX();
+        //  }
+
+        //  else if (y2 == 0 || y2 >= blurr.getHeight()){
+        //      y2 = pixel.getY();
+        //  }
+
+        //Did it with Help, couldn't do it on my own.
+        if (x2 > 0 && y2 > 0) {
+            var newPixel = blurr.getPixel(x2,y2);
+            blank.setPixel(x,y,newPixel);
+            }   
+            else {
+                blank.setPixel(x,y,pixel);
+            }
+        // var random = blurr.getPixel(x2, y2);
+        // blank.setPixel(x,y, random);
+        }
+    }
+    var canvas = document.getElementById("can");
+    blank.drawTo(canvas);
+    }
+
+    // function randomCordX() {
+    //         x2 = (pixel.getX()+(Math.floor((Math.random() * 10))));
+    //         return x2;
+    //     }
+    
+
+    // function randomCordY() {
+    //      {
+    //         y2 = (pixel.getY()+(Math.floor((Math.random() * 10))));  
+    //         return y2;
+    //     }
+    // }
+
+
+
+
+
+    function filterBlur() {
+        blurOutput = new SimpleImage(blurImage.getWidth(), blurImage.getHeight());
+        for (var pixel of blurImage.values()) {
+            var x = pixel.getX();
+            var y = pixel.getY();
+            if ((Math.random() < 0.5)) {
+                blurOutput.setPixel(x,y,pixel);
+            }  
+            else {
+                var newX = x - (Math.random()*15);
+                var newY = y - (Math.random()*15);
+                if ((newX > 0 && newY > 0)) {
+                    var newPixel = blurImage.getPixel(newX,newY);
+                    blurOutput.setPixel(x,y,newPixel);
+                    }   
+                    else {
+                        blurOutput.setPixel(x,y,pixel);
+                    }
+            }     
+        }
+    }
+    
